@@ -1,0 +1,13 @@
+{
+    "name": "fr-esco/php-dice",
+    "description": "A generic RPG dice roller syntax and library.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Francesco Colamonici",
+            "email": "f.colamonici@gmail.com"
+        }
+    ],
+    "require": {}
+}

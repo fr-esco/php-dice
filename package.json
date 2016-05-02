@@ -1,0 +1,25 @@
+{
+  "name": "php-dice",
+  "version": "0.1.0",
+  "description": "A generic RPG dice roller syntax and library.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fr-esco/php-dice.git"
+  },
+  "keywords": [
+    "dice",
+    "rpg",
+    "roller"
+  ],
+  "author": {
+    "name": "Francesco Colamonici",
+    "email": "f.colamonici@gmail.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "pegjs": "^0.8.0",
+	"php-pegjs": "^0.8.7"
+  }
+}
