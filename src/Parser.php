@@ -145,6 +145,10 @@ class Variable extends BaseExpression
 
     public function evaluate($scope = null) {
         // TODO $scope = defaultScope.buildDefaultScope($scope);
+        $scope = new \stdClass();
+        $scope->clm = function () {
+            return 1;
+        };
         $this->value = $scope->{$this->name};
 
         return $this;
@@ -183,6 +187,13 @@ class Func extends BaseExpression
 
     public function evaluate($scope = null) {
         // TODO $scope = defaultScope.buildDefaultScope($scope);
+        $scope = new Scope([
+            'clm' => function ($args) {
+//                var_dump($args);
+                return $args[0]->value;
+            },
+        ]);
+
         $this->value = $scope->{$this->name}(array_merge($this->args, [$scope]));
 
         return $this;
@@ -192,7 +203,9 @@ class Func extends BaseExpression
         $name = $this->needsEscaping() ? "'" . $this->name . "'" : $this->name;
         $args = array_reduce($this->args, function ($result, $arg) {
             /** @var $arg BaseExpression */
-            $result[] = $arg->render();
+            if ($arg instanceOf BaseExpression)
+                $result[] = $arg->render();
+            return $result;
         }, []);
 
         return implode(' ', ['{', $name, '(', implode(', ', $args), '):', $this->value, '}']);

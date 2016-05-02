@@ -28,4 +28,5 @@ try {
 	echo '</pre>';
 } catch (dice\SyntaxError $ex) {
     $message = 'Syntax error: ' . $ex->getMessage() . ' At line ' . $ex->grammarLine . ' column ' . $ex->grammarColumn . ' offset ' . $ex->grammarOffset;
+	echo $message;
 }

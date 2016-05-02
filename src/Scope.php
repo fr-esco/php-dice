@@ -1,15 +1,26 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Francesco Colamonici
- * Date: 02/05/2016
- * Time: 14:07
- */
 
 namespace dice;
 
-
 class Scope
 {
+    public function __construct(array $arguments = array()) {
+        if (!empty($arguments)) {
+            foreach ($arguments as $property => $argument) {
+                if ($argument instanceOf \Closure) {
+                    $this->{$property} = $argument;
+                } else {
+                    $this->{$property} = $argument;
+                }
+            }
+        }
+    }
 
+    public function __call($method, $arguments) {
+        if (isset($this->{$method}) && is_callable($this->{$method})) {
+            return call_user_func_array($this->{$method}, $arguments);
+        } else {
+            throw new \Exception("Fatal error: Call to undefined method Scope::{$method}()");
+        }
+    }
 }
