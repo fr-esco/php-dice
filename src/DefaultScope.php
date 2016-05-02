@@ -4,6 +4,9 @@ namespace dice;
 
 abstract class DefaultScope
 {
+    /** @var int */
+    public $defaultSides = 6;
+
     /**
      * Find lowest value
      *
