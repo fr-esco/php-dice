@@ -75,7 +75,7 @@ class Operation extends BaseExpression
     }
 
     public function evaluate($scope = null) {
-        // TODO $scope = defaultScope.buildDefaultScope($scope);
+        $scope = new Scope($scope);
 
         $this->left = $this->left->evaluate($scope);
         $this->right = $this->right->evaluate($scope);
@@ -144,11 +144,7 @@ class Variable extends BaseExpression
     }
 
     public function evaluate($scope = null) {
-        // TODO $scope = defaultScope.buildDefaultScope($scope);
-        $scope = new \stdClass();
-        $scope->clm = function () {
-            return 1;
-        };
+        $scope = new Scope($scope);
         $this->value = $scope->{$this->name};
 
         return $this;
@@ -186,15 +182,9 @@ class Func extends BaseExpression
     }
 
     public function evaluate($scope = null) {
-        // TODO $scope = defaultScope.buildDefaultScope($scope);
-        $scope = new Scope([
-            'clm' => function ($args) {
-//                var_dump($args);
-                return $args[0]->value;
-            },
-        ]);
+        $scope = new Scope($scope);
 
-        $this->value = $scope->{$this->name}(array_merge($this->args, [$scope]));
+        $this->value = call_user_func_array([$scope, $this->name], array_merge($this->args, [$scope]));
 
         return $this;
     }
@@ -205,6 +195,7 @@ class Func extends BaseExpression
             /** @var $arg BaseExpression */
             if ($arg instanceOf BaseExpression)
                 $result[] = $arg->render();
+
             return $result;
         }, []);
 
@@ -239,7 +230,8 @@ class Repeat extends BaseExpression
     }
 
     public function evaluate($scope = null) {
-        // TODO $scope = defaultScope.buildDefaultScope($scope);
+        $scope = new Scope($scope);
+
         for ($i = 0; $i < $this->count; $i++)
             $this->results[] = $this->right->evaluate($scope);
         $this->value = array_reduce($this->results, function ($sum, $result) {

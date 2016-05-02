@@ -2,9 +2,9 @@
 
 namespace dice;
 
-class Scope
+class Scope extends DefaultScope
 {
-    public function __construct(array $arguments = array()) {
+    public function __construct($arguments = array()) {
         if (!empty($arguments)) {
             foreach ($arguments as $property => $argument) {
                 if ($argument instanceOf \Closure) {
