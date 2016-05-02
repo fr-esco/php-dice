@@ -24,7 +24,7 @@ class Roll extends BaseExpression
     private $count;
 
     /** @var int */
-    private $sides;
+    public $sides;
 
     public function __construct($count, $sides) {
         $this->count = $count === null || !is_numeric($count) ? 1 : intval($count);
