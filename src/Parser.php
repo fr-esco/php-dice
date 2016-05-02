@@ -20,6 +20,12 @@ class Roll extends BaseExpression
     public $type = 'roll';
     public $results = [];
 
+    /** @var int */
+    private $count;
+
+    /** @var int */
+    private $sides;
+
     public function __construct($count, $sides) {
         $this->count = $count === null || !is_numeric($count) ? 1 : intval($count);
         $this->sides = $sides;
@@ -34,10 +40,27 @@ class Roll extends BaseExpression
 
         return $this;
     }
+
+    public function render() {
+        $roll = implode('', [$this->count, 'd', $this->sides]);
+        $results = implode(', ', $this->results);
+
+        return implode(' ', ['{', $roll, ': [', $results, '] }']);
+    }
+
+    public function __toString() {
+        return implode('', [$this->count, 'd', $this->sides]);
+    }
 }
 
 class Operation extends BaseExpression
 {
+    /** @var BaseExpression */
+    private $left;
+
+    /** @var BaseExpression */
+    private $right;
+
     public function __construct($type, $left, $right) {
         $this->type = $type;
         $this->left = $left;
@@ -67,6 +90,18 @@ class Operation extends BaseExpression
 
         return $this;
     }
+
+    public function render() {
+        $op = $this->type === 'add' ? '+' : $this->type === 'subtract' ? '-' : $this->type === 'multiply' ? '*' : '/';
+
+        return implode(' ', [$this->left->render(), $op, $this->right->render()]);
+    }
+
+    public function __toString() {
+        $op = $this->type === 'add' ? '+' : $this->type === 'subtract' ? '-' : $this->type === 'multiply' ? '*' : '/';
+
+        return implode(' ', [$this->left, $op, $this->right]);
+    }
 }
 
 class Num extends BaseExpression
@@ -80,11 +115,22 @@ class Num extends BaseExpression
     public function evaluate($scope = null) {
         return $this;
     }
+
+    public function render() {
+        return strval($this->value);
+    }
+
+    public function __toString() {
+        return strval($this->value);
+    }
 }
 
 class Variable extends BaseExpression
 {
     public $type = 'variable';
+
+    /** @var string */
+    private $name;
 
     public function __construct($name) {
         $this->name = $name;
@@ -96,12 +142,32 @@ class Variable extends BaseExpression
 
         return $this;
     }
+
+    public function render() {
+        $name = $this->needsEscaping() ? "'" . $this->name . "'" : $this->name;
+
+        return implode(' ', ['{', $name, ':', $this->value, '}']);
+    }
+
+    public function __toString() {
+        return $this->needsEscaping() ? "'" . $this->name . "'" : $this->name;
+    }
+
+    private function needsEscaping() {
+        return preg_match('/^[A-Za-z_][A-Za-z0-9_]+$/g', $this->name) !== 1;
+    }
 }
 
 class Func extends BaseExpression
 {
     public $type = 'function';
     public $results = [];
+
+    /** @var string */
+    private $name;
+
+    /** @var array */
+    private $args;
 
     public function __construct($name, $args = []) {
         $this->name = $name;
@@ -114,12 +180,38 @@ class Func extends BaseExpression
 
         return $this;
     }
+
+    public function render() {
+        $name = $this->needsEscaping() ? "'" . $this->name . "'" : $this->name;
+        $args = array_reduce($this->args, function ($result, $arg) {
+            /** @var $arg BaseExpression */
+            $result[] = $arg->render();
+        }, []);
+
+        return implode(' ', ['{', $name, '(', implode(', ', $args), '):', $this->value, '}']);
+    }
+
+    public function __toString() {
+        $name = $this->needsEscaping() ? "'" . $this->name . "'" : $this->name;
+
+        return implode('', [$name, '(', implode(', ', $this->args), ')']);
+    }
+
+    private function needsEscaping() {
+        return preg_match('/^[A-Za-z_][A-Za-z0-9_]+$/g', $this->name) !== 1;
+    }
 }
 
 class Repeat extends BaseExpression
 {
     public $type = 'repeat';
     public $results = [];
+
+    /** @var int */
+    private $count;
+
+    /** @var BaseExpression */
+    private $right;
 
     public function __construct($count, $right) {
         $this->count = $count;
@@ -135,5 +227,13 @@ class Repeat extends BaseExpression
         }, 0);
 
         return $this;
+    }
+
+    public function render() {
+        return implode('', [$this->count, '(', $this->right->render(), ')']);
+    }
+
+    public function __toString() {
+        return implode('', [$this->count, '(', $this->right, ')']);
     }
 }

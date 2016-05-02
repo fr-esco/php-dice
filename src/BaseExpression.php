@@ -8,4 +8,6 @@ abstract class BaseExpression
     public $value = null;
 
     abstract public function evaluate($scope = null);
+
+    abstract public function render();
 }
