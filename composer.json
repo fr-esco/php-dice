@@ -9,5 +9,10 @@
             "email": "f.colamonici@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "php": ">=5.4"
+    },
+    "autoload": {
+        "psr-4": { "dice\\": "src/" }
+    }
 }
