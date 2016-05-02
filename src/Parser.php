@@ -55,6 +55,13 @@ class Roll extends BaseExpression
 
 class Operation extends BaseExpression
 {
+    private static $typeToString = [
+        'add' => '+',
+        'subtract' => '-',
+        'multiply' => '*',
+        'divide' => '/',
+    ];
+
     /** @var BaseExpression */
     private $left;
 
@@ -92,13 +99,13 @@ class Operation extends BaseExpression
     }
 
     public function render() {
-        $op = $this->type === 'add' ? '+' : $this->type === 'subtract' ? '-' : $this->type === 'multiply' ? '*' : '/';
+        $op = self::$typeToString[$this->type];
 
         return implode(' ', [$this->left->render(), $op, $this->right->render()]);
     }
 
     public function __toString() {
-        $op = $this->type === 'add' ? '+' : $this->type === 'subtract' ? '-' : $this->type === 'multiply' ? '*' : '/';
+        $op = self::$typeToString[$this->type];
 
         return implode(' ', [$this->left, $op, $this->right]);
     }
@@ -154,7 +161,7 @@ class Variable extends BaseExpression
     }
 
     private function needsEscaping() {
-        return preg_match('/^[A-Za-z_][A-Za-z0-9_]+$/g', $this->name) !== 1;
+        return preg_match('/^[A-Za-z_][A-Za-z0-9_]+$/', $this->name) !== 1;
     }
 }
 
@@ -198,7 +205,7 @@ class Func extends BaseExpression
     }
 
     private function needsEscaping() {
-        return preg_match('/^[A-Za-z_][A-Za-z0-9_]+$/g', $this->name) !== 1;
+        return preg_match('/^[A-Za-z_][A-Za-z0-9_]+$/', $this->name) !== 1;
     }
 }
 
