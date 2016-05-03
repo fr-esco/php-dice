@@ -44,7 +44,7 @@ echo $result;
 echo $result->render();
 ```
 
-The final value is stored in its `value` property.
+The final result is stored in its `value` property.
 
 ```php
 $result->value;
@@ -79,8 +79,8 @@ $result = $parser->parse($expression, [
 ], '\custom\namespace\Scope');
 ```
 
-You can provide an associative array with keys (at least 2 characters long) and values
-as numbers or functions (see [DefaultScope](src/DefaultScope.php) implementation for examples).
+You can provide an associative array using as key any at least 2 characters long string that could appear in your expression,
+and as value any number or function to execute (see [DefaultScope](src/DefaultScope.php) implementation for examples).
 
 You can also specify your `Scope` Class, that has to extend `dice\Scope`.
 
@@ -88,7 +88,7 @@ You can also specify your `Scope` Class, that has to extend `dice\Scope`.
 
 * Expression (space-insensitive): `d6 + foo * bar() / defaultSides + min(d12, 2d4) + rerollBelow(5, 3d6)`
 * Render after evaluation: `{ 1d6 : [ 2 ] } + { foo : 2 } * { bar (  ): 3 } / { defaultSides : 6 } + { min ( { 1d12 : [ 10 ] }, { 2d4 : [ 1, 2 ] } ): 3 } + { rerollBelow ( 5, { 3d6 : [ 6, 6, 4 ] } ): 18 }`
-* Stringified: `1d6 + foo * bar() / defaultSides + min(1d12, 2d4) + rerollBelow(5, 3d6)`
+* Stringified version: `1d6 + foo * bar() / defaultSides + min(1d12, 2d4) + rerollBelow(5, 3d6)`
 * Value (rolled): `24`
 
 ## Development
@@ -111,7 +111,7 @@ npm run build
 ### Visual Test
 Serve `index.php` with your favourite webserver and browse to `http://localhost/php-dice/index.php`.
 
-You can enter the expression to parse in the textbox and submit the form by clicking on the button.
+You can enter the expression to parse in the textbox and submit the form by clicking on the "Roll" button.
 
 Details and results will be shown below.
 
