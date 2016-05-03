@@ -2,6 +2,14 @@
     "name": "fr-esco/php-dice",
     "description": "A generic RPG dice roller syntax and library.",
     "type": "library",
+    "keywords": [
+      "rpg",
+      "dice",
+      "die",
+      "roll",
+      "parser",
+      "launcher"
+    ],
     "license": "MIT",
     "authors": [
         {
