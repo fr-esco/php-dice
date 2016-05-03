@@ -50,6 +50,22 @@ The final value is stored in its `value` property.
 $result->value;
 ```
 
+### Exception Handling
+
+You should always wrap the parsing phase in a `try / catch` block:
+
+```php
+try {
+    $result = $parser->parse($expression);
+} catch (dice\SyntaxError $ex) {
+    $stack = ['Syntax error:', $ex->getMessage(),
+        'At line', $ex->grammarLine,
+        'column', $ex->grammarColumn,
+        'offset', $ex->grammarOffset];
+    echo implode(' ', $stack);
+}
+```
+
 ### Customization
 
 You can also optionally provide a custom *scope* with additional functions or variables that should be evaluated:
@@ -68,7 +84,12 @@ as numbers or functions (see [DefaultScope](src/DefaultScope.php) implementation
 
 You can also specify your `Scope` Class, that has to extend `dice\Scope`.
 
-## Examples
+## Example
+
+* Expression (space-insensitive): `d6 + foo * bar() / defaultSides + min(d12, 2d4) + rerollBelow(5, 3d6)`
+* Render after evaluation: `{ 1d6 : [ 2 ] } + { foo : 2 } * { bar (  ): 3 } / { defaultSides : 6 } + { min ( { 1d12 : [ 10 ] }, { 2d4 : [ 1, 2 ] } ): 3 } + { rerollBelow ( 5, { 3d6 : [ 6, 6, 4 ] } ): 18 }`
+* Stringified: `1d6 + foo * bar() / defaultSides + min(1d12, 2d4) + rerollBelow(5, 3d6)`
+* Value (rolled): `24`
 
 ## Development
 
