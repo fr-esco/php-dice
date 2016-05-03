@@ -52,19 +52,23 @@ $result->value;
 
 ### Customization
 
-You can also optionally provide a custom *scope* with additional functions or variables that should be evaluated
-to the parser:
+You can also optionally provide a custom *scope* with additional functions or variables that should be evaluated:
 
 ```php
-$parser = new dice\Parser([
-    'prop' => 'test',
-    'foo' => 1
-    'doubleUp' => function($expr, $scope) {
-        $expr = $expr->evaluate($scope);
-        return $expr->value * 2;
-    }
-]);
+$result = $parser->parse($expression, [
+    'foo' => 2,
+    'bar' => function () {
+        return 3;
+    },
+], '\custom\namespace\Scope');
 ```
+
+You can provide an associative array with keys (at least 2 characters long) and values
+as numbers or functions (see [DefaultScope](src/DefaultScope.php) implementation for examples).
+
+You can also specify your `Scope` Class, that has to extend `dice\Scope`.
+
+## Examples
 
 ## Development
 

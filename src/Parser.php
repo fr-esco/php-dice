@@ -4,7 +4,12 @@ namespace dice;
 
 class Parser extends BaseParser
 {
+    public function parse($input, $config = [], $scope = null) {
+        ScopeProvider::setClassName($scope);
+        ScopeProvider::setConfig($config);
 
+        return parent::parse($input);
+    }
 }
 
 function rollDie($sides) {
@@ -31,7 +36,7 @@ class Roll extends BaseExpression
         $this->sides = $sides;
     }
 
-    public function evaluate($scope = null) {
+    public function evaluate($scope = []) {
         for ($i = 0; $i < $this->count; $i++)
             $this->results[] = rollDie($this->sides);
         $this->value = array_reduce($this->results, function ($sum, $result) {
@@ -74,8 +79,8 @@ class Operation extends BaseExpression
         $this->right = $right;
     }
 
-    public function evaluate($scope = null) {
-        $scope = new Scope($scope);
+    public function evaluate($scope = []) {
+        $scope = ScopeProvider::getScope($scope);
 
         $this->left = $this->left->evaluate($scope);
         $this->right = $this->right->evaluate($scope);
@@ -119,7 +124,7 @@ class Num extends BaseExpression
         $this->value = $value;
     }
 
-    public function evaluate($scope = null) {
+    public function evaluate($scope = []) {
         return $this;
     }
 
@@ -143,8 +148,9 @@ class Variable extends BaseExpression
         $this->name = $name;
     }
 
-    public function evaluate($scope = null) {
-        $scope = new Scope($scope);
+    public function evaluate($scope = []) {
+        $scope = ScopeProvider::getScope($scope);
+
         $this->value = $scope->{$this->name};
 
         return $this;
@@ -181,8 +187,8 @@ class Func extends BaseExpression
         $this->args = $args;
     }
 
-    public function evaluate($scope = null) {
-        $scope = new Scope($scope);
+    public function evaluate($scope = []) {
+        $scope = ScopeProvider::getScope($scope);
 
         $this->value = call_user_func_array([$scope, $this->name], array_merge($this->args, [$scope]));
 
@@ -229,8 +235,8 @@ class Repeat extends BaseExpression
         $this->right = $right;
     }
 
-    public function evaluate($scope = null) {
-        $scope = new Scope($scope);
+    public function evaluate($scope = []) {
+        $scope = ScopeProvider::getScope($scope);
 
         for ($i = 0; $i < $this->count; $i++)
             $this->results[] = $this->right->evaluate($scope);
