@@ -22,7 +22,7 @@
   "dependencies": {
   },
   "devDependencies": {
-    "pegjs": "^0.8.0",
+    "pegjs": "^0.10.0",
 	"php-pegjs": "^0.8.7"
   }
 }
