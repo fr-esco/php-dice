@@ -1,4 +1,6 @@
 # php-dice [![Packagist Version](https://img.shields.io/packagist/v/fr-esco/php-dice.svg?style=flat-square)](https://packagist.org/packages/fr-esco/php-dice) [![Total Downloads](https://img.shields.io/packagist/dt/fr-esco/php-dice.svg?style=flat-square)](https://packagist.org/packages/fr-esco/php-dice) [![Software License](https://img.shields.io/packagist/l/fr-esco/php-dice.svg?style=flat-square)](LICENSE.md)
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/fr-esco/php-dice.svg)](https://greenkeeper.io/)
 A generic RPG dice roller syntax and library.
 
 ## Getting started
